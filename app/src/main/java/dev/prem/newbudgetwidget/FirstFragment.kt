@@ -4,10 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -27,6 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import dev.prem.newbudgetwidget.databinding.FragmentFirstBinding
 
 /**
@@ -114,9 +119,43 @@ class FirstFragment : Fragment() {
                             color = colorResource(R.color.textColor),
                             textAlign = TextAlign.Center
                         )
-                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
                             items(listItems) { item ->
-                                Text(text = item, color = colorResource(id = R.color.textColor))
+                                Card(
+                                    backgroundColor = colorResource(R.color.cardBackground),
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(35.dp)
+                                            .padding(8.dp)
+                                    ) {
+                                        Box(
+                                            modifier = Modifier.fillMaxHeight(),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(
+                                                text = item,
+                                                color = colorResource(id = R.color.textColor),
+                                                textAlign = TextAlign.Center
+                                            )
+                                        }
+                                        IconButton(onClick = {
+                                            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Default.Edit,
+                                                contentDescription = "Edit",
+                                                modifier = Modifier.size(15.dp),
+                                                tint = colorResource(R.color.textColor)
+                                            )
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -125,14 +164,6 @@ class FirstFragment : Fragment() {
         }
         return binding.root
 
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-//        binding.buttonFirst.setOnClickListener {
-//            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-//        }
     }
 
     override fun onDestroyView() {

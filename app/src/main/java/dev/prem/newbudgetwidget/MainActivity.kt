@@ -7,7 +7,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dev.prem.newbudgetwidget.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,5 +42,9 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
+    }
+
+    fun getFloatingActionButton(): FloatingActionButton {
+        return binding.fab
     }
 }

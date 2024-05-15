@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -136,7 +139,7 @@ class FirstFragment : Fragment() {
                                     ) {
                                         Box(
                                             modifier = Modifier.fillMaxHeight(),
-                                            contentAlignment = Alignment.Center
+                                            contentAlignment = Alignment.Center,
                                         ) {
                                             Text(
                                                 text = item,
@@ -144,6 +147,7 @@ class FirstFragment : Fragment() {
                                                 textAlign = TextAlign.Center
                                             )
                                         }
+                                        Spacer(Modifier.weight(1f).fillMaxHeight())
                                         IconButton(onClick = {
                                             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
                                         }) {
@@ -166,6 +170,12 @@ class FirstFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val floatingButton = (activity as MainActivity?)!!.getFloatingActionButton()
+        floatingButton.show()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -1,10 +1,13 @@
 package dev.prem.newbudgetwidget
 
+import android.content.Context
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.background
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,15 +31,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import dev.prem.newbudgetwidget.databinding.FragmentFirstBinding
+import kotlinx.coroutines.runBlocking
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
@@ -107,7 +116,7 @@ class FirstFragment : Fragment() {
                                     color = colorResource(R.color.textColor),
                                     fontSize = 18.sp
                                 )
-                                IconButton(onClick = { }) {
+                                IconButton(onClick = { getBudgetFromUser() }) {
                                     Icon(
                                         imageVector = Icons.Default.Edit,
                                         contentDescription = "Edit",
@@ -147,7 +156,10 @@ class FirstFragment : Fragment() {
                                                 textAlign = TextAlign.Center
                                             )
                                         }
-                                        Spacer(Modifier.weight(1f).fillMaxHeight())
+                                        Spacer(
+                                            Modifier
+                                                .weight(1f)
+                                                .fillMaxHeight())
                                         IconButton(onClick = {
                                             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
                                         }) {
@@ -168,6 +180,36 @@ class FirstFragment : Fragment() {
         }
         return binding.root
 
+    }
+
+    private fun getBudgetFromUser() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Monthly Budget")
+
+        val input = EditText(requireContext())
+        input.inputType = InputType.TYPE_CLASS_NUMBER
+        builder.setView(input)
+
+        builder.setPositiveButton("OK"
+        ) { _, _ -> saveBudgetToSharedPref(input.text.toString()) }
+        builder.setNegativeButton("Cancel"
+        ) { dialog, _ -> dialog.cancel() }
+
+        builder.show()
+    }
+
+    private fun saveBudgetToSharedPref(budgetString: String) {
+        val budget = Integer.parseInt(budgetString)
+        runBlocking {
+            saveToDataStore(budget)
+        }
+    }
+
+    private suspend fun saveToDataStore(budget: Int) {
+        context?.dataStore?.edit { settings ->
+            val MONTHLY_BUDGET = intPreferencesKey(Constants.PREF_KEY_MONTHLY_BUDGET)
+            settings[MONTHLY_BUDGET] = budget
+        }
     }
 
     override fun onResume() {

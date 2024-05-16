@@ -32,9 +32,4 @@ class MainActivity : AppCompatActivity() {
     fun getFloatingActionButton(): FloatingActionButton {
         return binding.fab
     }
-
-//    override fun onResume() {
-//        super.onResume()
-//        binding.toolbar.title = "Monthly Budget"
-//    }
 }

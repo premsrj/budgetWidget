@@ -29,6 +29,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -41,8 +43,12 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.findNavController
 import dev.prem.newbudgetwidget.databinding.FragmentFirstBinding
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_preferences")
@@ -100,32 +106,7 @@ class FirstFragment : Fragment() {
                             color = colorResource(R.color.textColor),
                             textAlign = TextAlign.Center
                         )
-                        Card(
-                            backgroundColor = colorResource(R.color.cardBackground),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp)
-                                    .wrapContentWidth(Alignment.CenterHorizontally)
-                            ) {
-                                Text(
-                                    text = "Limit 12789, Left: 8234",
-                                    color = colorResource(R.color.textColor),
-                                    fontSize = 18.sp
-                                )
-                                IconButton(onClick = { getBudgetFromUser() }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Edit,
-                                        contentDescription = "Edit",
-                                        modifier = Modifier.size(20.dp),
-                                        tint = colorResource(R.color.textColor)
-                                    )
-                                }
-                            }
-                        }
+                        MonthlyBudgetCard()
                         Text(
                             text = "Expenses",
                             color = colorResource(R.color.textColor),
@@ -182,6 +163,38 @@ class FirstFragment : Fragment() {
 
     }
 
+    @Composable
+    private fun MonthlyBudgetCard() {
+        val uiState by readBudgetFromDataStore().collectAsStateWithLifecycle(initialValue = 0)
+        Card(
+            backgroundColor = colorResource(R.color.cardBackground),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            ) {
+
+                Text(
+                    text = uiState.toString(),
+                    color = colorResource(R.color.textColor),
+                    fontSize = 18.sp
+                )
+                IconButton(onClick = { getBudgetFromUser() }) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit",
+                        modifier = Modifier.size(20.dp),
+                        tint = colorResource(R.color.textColor)
+                    )
+                }
+            }
+        }
+    }
+
     private fun getBudgetFromUser() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Monthly Budget")
@@ -210,6 +223,16 @@ class FirstFragment : Fragment() {
             val MONTHLY_BUDGET = intPreferencesKey(Constants.PREF_KEY_MONTHLY_BUDGET)
             settings[MONTHLY_BUDGET] = budget
         }
+    }
+    fun readBudgetFromDataStore(): Flow<Int> {
+        val MONTHLY_BUDGET = intPreferencesKey(Constants.PREF_KEY_MONTHLY_BUDGET)
+        val budgetFlow: Flow<Int> = requireContext().dataStore.data
+            .catch { ex -> 0 }
+            .map { preferences ->
+                // No type safety.
+                preferences[MONTHLY_BUDGET] ?: 0
+            }
+        return budgetFlow;
     }
 
     override fun onResume() {

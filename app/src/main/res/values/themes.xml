@@ -8,7 +8,7 @@
 
     <style name="Theme.NewBudgetWidget" parent="Base.Theme.NewBudgetWidget" />
     <style name="ToolBarStyle" parent="Theme.AppCompat">
-        <item name="android:background">#0f0f0f</item>
+        <item name="android:background">#018577</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>

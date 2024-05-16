@@ -44,4 +44,10 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="today">Today</string>
+    <string name="today_left">₹ %.2f Left</string>
+    <string name="today_limit">₹ %.2f Limit</string>
+    <string name="month">Month</string>
+    <string name="budgetLimits">Limit: ₹%.2f, Left: ₹%.2f </string>
+    <string name="expenses">Expenses</string>
 </resources>

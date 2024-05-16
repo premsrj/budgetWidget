@@ -50,4 +50,9 @@
     <string name="month">Month</string>
     <string name="budgetLimits">Limit: ₹%.2f, Left: ₹%.2f </string>
     <string name="expenses">Expenses</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="monthly_budget">Monthly Budget</string>
+    <string name="amount">Amount</string>
+    <string name="description">Description</string>
+    <string name="save">Save</string>
 </resources>

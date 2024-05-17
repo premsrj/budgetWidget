@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dev.prem.newbudgetwidget.databinding.ActivityMainBinding
 
@@ -27,6 +28,9 @@ class MainActivity : AppCompatActivity() {
             val addIntent = Intent(this, AddEditActivity::class.java)
             startActivity(addIntent)
         }
+
+        binding.expensesList.adapter = ExpenseListAdapter()
+        binding.expensesList.layoutManager = LinearLayoutManager(this)
     }
 
     fun getFloatingActionButton(): FloatingActionButton {

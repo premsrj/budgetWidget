@@ -4,11 +4,12 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExpenseDao {
     @Query("SELECT * FROM Expense")
-    fun getAll(): List<Expense>
+    fun getAll(): Flow<List<Expense>>
 
     @Query("SELECT * FROM Expense WHERE uid IN (:expenseIds)")
     fun loadAllByIds(expenseIds: IntArray): List<Expense>
@@ -17,7 +18,7 @@ interface ExpenseDao {
     fun findById(id: Int): Expense
 
     @Query("SELECT * FROM Expense WHERE timestamp BETWEEN :startTime AND :endDate")
-    fun findAllBetweenTimestamps(startTime: Long, endDate: Long): List<Expense>
+    fun findAllBetweenTimestamps(startTime: Long, endDate: Long): Flow<List<Expense>>
 
     @Insert
     fun insertAll(vararg users: Expense)

@@ -7,9 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import dev.prem.newbudgetwidget.Constants.simpleDateFormat
 import dev.prem.newbudgetwidget.data.Expense
 import java.time.Instant
-import java.time.format.DateTimeFormatter
+import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.util.Date
+
 
 class ExpenseListAdapter :
     ListAdapter<Expense, ExpenseListAdapter.ExpenseViewHolder>(ExpenseComparator()) {
@@ -25,10 +29,12 @@ class ExpenseListAdapter :
     class ExpenseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val dateTextView: TextView = itemView.findViewById(R.id.dateText)
         private val amountTextView: TextView = itemView.findViewById(R.id.amountText)
-        private val descriptionTextView: TextView = itemView.findViewById(R.id.dateText)
+        private val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionText)
         fun bind(expense: Expense) {
             Instant.ofEpochMilli(expense.timestamp)
-            dateTextView.text = dateFormatter.format(Instant.ofEpochMilli(expense.timestamp))
+            val date = Date(expense.timestamp * 1000)
+            val dateTime = LocalDateTime.ofEpochSecond(expense.timestamp, 0, ZoneOffset.UTC)
+            dateTextView.text = simpleDateFormat.format(date)
             amountTextView.text = String.format(
                 amountTextView.context.getString(R.string.amount_string),
                 expense.amount
@@ -37,8 +43,6 @@ class ExpenseListAdapter :
         }
 
         companion object {
-            val dateFormatter: DateTimeFormatter =
-                DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a")
 
             fun create(parent: ViewGroup): ExpenseViewHolder {
                 val view: View = LayoutInflater.from(parent.context)

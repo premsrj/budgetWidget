@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 
 class ExpenseViewModel(private val dao: ExpenseDao) : ViewModel() {
 
@@ -18,7 +16,7 @@ class ExpenseViewModel(private val dao: ExpenseDao) : ViewModel() {
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
      */
-    fun insert(expense: Expense) = viewModelScope.launch {
+    fun insert(expense: Expense) {
         dao.insertAll(expense)
     }
 }

@@ -57,4 +57,6 @@
     <string name="description">Description</string>
     <string name="save">Save</string>
     <string name="add_new_expense_button">Add New Expense Button</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="update_expense">Update Expense</string>
 </resources>

@@ -11,11 +11,8 @@ interface ExpenseDao {
     @Query("SELECT * FROM Expense")
     fun getAll(): Flow<List<Expense>>
 
-    @Query("SELECT * FROM Expense WHERE uid IN (:expenseIds)")
-    fun loadAllByIds(expenseIds: IntArray): List<Expense>
-
-    @Query("SELECT * FROM Expense WHERE uid IN (:id)")
-    fun findById(id: Int): Expense
+    @Query("SELECT * FROM Expense WHERE timestamp IN (:timestamp)")
+    fun findByTimestamp(timestamp: Long): Expense
 
     @Query("SELECT * FROM Expense WHERE timestamp BETWEEN :startTime AND :endDate")
     fun findAllBetweenTimestamps(startTime: Long, endDate: Long): Flow<List<Expense>>
